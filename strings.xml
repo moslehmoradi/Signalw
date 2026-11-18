@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">سیگنال‌نما</string>
+    <string name="widget_name">قدرت سیگنال سیم‌کارت</string>
+    <string name="widget_description">نمایش زنده قدرت سیگنال اینترنت سیم‌کارت (dBm / 5G / 4G+) روی صفحه اصلی</string>
+</resources>
