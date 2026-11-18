@@ -14,9 +14,11 @@ jobs:
 
       - name: Extract mobile ZIP if present
         run: |
-          if [ -f "SignalNamaWidget-Android.zip" ]; then
-            unzip -o SignalNamaWidget-Android.zip
-          fi
+          for z in *.zip; do
+            if [ -f "$z" ]; then
+              unzip -o "$z"
+            fi
+          done
           if [ -d "SignalNamaWidget-Android" ] && [ ! -f "SignalNamaWidget-Android/gradle.properties" ]; then
             printf "org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8\nandroid.useAndroidX=true\n" > SignalNamaWidget-Android/gradle.properties
           fi
@@ -27,8 +29,14 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Configure pre-installed Android SDK
+        run: |
+          SDK_DIR="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          echo "ANDROID_HOME=$SDK_DIR" >> "$GITHUB_ENV"
+          SDK_MGR=$(find "$SDK_DIR/cmdline-tools" -name sdkmanager -type f 2>/dev/null | head -n 1 || true)
+          if [ -n "$SDK_MGR" ]; then
+            yes | "$SDK_MGR" --licenses >/dev/null 2>&1 || true
+          fi
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
